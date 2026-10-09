@@ -1,0 +1,21 @@
+info:
+  name: obtener-imagen
+  type: http
+  seq: 7
+  description: |-
+    Devuelve la imagen del usuario {id} en crudo. Este endpoint es publico:
+    no necesita token (auth: none).
+
+    404 si el usuario no existe o todavia no subio una imagen.
+
+http:
+  method: GET
+  url: "{{baseUrl}}/usuarios/1/imagen"
+  auth: none
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

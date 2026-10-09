@@ -1,0 +1,25 @@
+info:
+  name: listar disponibles (jugador)
+  type: http
+  seq: 2
+  description: |-
+    Torneos con estado EN_PROCESO, con lo que hay que saber para decidir si me
+    apunto: inscritos, cuposDisponibles y yaInscrito.
+
+    REQUISITO: el usuario del token debe tener rol JUGADOR y una fila en la
+    tabla jugador (POST /jugadores con su usuarioId). Si no, devuelve 404
+    porque no existe un jugador asociado a ese usuario.
+    El token de este Collection es de ADMINISTRADOR: reemplazalo por el de un
+    JUGADOR para probar esto.
+
+http:
+  method: GET
+  url: "{{baseUrl}}/torneos/disponibles?pagina=0&tamano=10"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

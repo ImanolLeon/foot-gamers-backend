@@ -1,0 +1,28 @@
+info:
+  name: crear
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/torneos"
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "Torneo de verano",
+        "categoriaId": 1,
+        "fechaInicio": "2026-07-01",
+        "fechaFin": "2026-07-31",
+        "cantidadJugadores": 16,
+        "trofeoId": 1,
+        "cantidadGrupos": 4
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

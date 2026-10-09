@@ -1,0 +1,23 @@
+info:
+  name: actualizar
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/jugadores/1"
+  body:
+    type: json
+    data: |-
+      {
+        "usuarioId": 1,
+        "equipoFavorito": "Real Madrid"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,22 @@
+info:
+  name: crear grupos
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{baseUrl}}/torneos/1/grupos"
+  body:
+    type: json
+    data: |-
+      {
+        "tipoAsignacion": "ALEATORIO"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,25 @@
+info:
+  name: crear
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/usuarios"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "usuario1",
+        "email": "usuario1@example.com",
+        "contrasena": "123456",
+        "rol": "JUGADOR"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

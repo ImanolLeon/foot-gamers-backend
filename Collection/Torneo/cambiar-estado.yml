@@ -1,0 +1,30 @@
+info:
+  name: cambiar estado a TERMINADO (admin)
+  type: http
+  seq: 6
+  description: |-
+    Unico cambio de estado permitido: EN_PROCESO -> TERMINADO.
+    No reabre un torneo ya terminado, y no acepta EN_PROCESO como destino.
+
+    400 TORNEO_YA_TERMINADO si ya estaba terminado.
+    400 ESTADO_TORNEO_INVALIDO si mandas cualquier valor distinto de TERMINADO.
+    400 validacion si mandas un valor que no existe en el enum
+    (ya no valen EN_GRUPOS, ELIMINATORIA ni FINALIZADO).
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/torneos/1/estado"
+  body:
+    type: json
+    data: |-
+      {
+        "estado": "TERMINADO"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

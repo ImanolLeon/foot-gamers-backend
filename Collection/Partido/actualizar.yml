@@ -1,0 +1,24 @@
+info:
+  name: actualizar
+  type: http
+  seq: 6
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/partidos/1"
+  body:
+    type: json
+    data: |-
+      {
+        "torneoId": 1,
+        "tipoPartido": "TORNEO",
+        "fecha": "2026-07-06"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

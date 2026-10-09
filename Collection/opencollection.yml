@@ -1,0 +1,55 @@
+opencollection: 1.0.0
+
+info:
+  name: FootGamer
+
+# Auth a nivel de coleccion: todos los requests heredan este bearer.
+# El token NO se guarda en el repo. Se carga en memoria cuando corres
+# Login > login, por eso hay que ejecutarlo al menos una vez por sesion.
+request:
+  auth:
+    type: bearer
+    token: "{{token}}"
+  variables:
+    - name: baseUrl
+      value: http://localhost:8080
+    - name: token
+      value: ""
+    - name: usuarioAdmin
+      value: imanol
+    - name: passwordAdmin
+      value: "123456"
+      secret: true
+  scripts:
+    - type: before-request
+      code: |-
+        const url = (req.getUrl() || "").split("?")[0];
+        const esLogin = url.endsWith("/auth/login");
+
+        if (!esLogin && !bru.getVar("token")) {
+          // Solo avisa: no bloquea el request. Si no hay token vas a recibir un
+          // 401 real del servidor, que es la respuesta correcta.
+          console.warn(
+            "No hay token en esta sesion. Ejecuta Login > login primero. " +
+            "El token vive en memoria, no en el repo."
+          );
+        }
+
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git

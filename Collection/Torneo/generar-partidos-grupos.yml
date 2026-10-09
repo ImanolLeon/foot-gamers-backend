@@ -1,0 +1,16 @@
+info:
+  name: generar partidos de grupos
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: "{{baseUrl}}/torneos/1/partidos/grupos"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

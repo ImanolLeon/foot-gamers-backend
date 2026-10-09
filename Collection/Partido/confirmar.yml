@@ -1,0 +1,16 @@
+info:
+  name: confirmar
+  type: http
+  seq: 8
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/partidos/1/confirmar?resultado=3-2"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

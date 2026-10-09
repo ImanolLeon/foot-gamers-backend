@@ -1,0 +1,24 @@
+info:
+  name: actualizar
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/trofeos/1"
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "Copa de la Liga 2026",
+        "fecha": "2026-12-20",
+        "jugadorId": null
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

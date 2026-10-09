@@ -1,0 +1,25 @@
+info:
+  name: actualizar
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/participaciones/1"
+  body:
+    type: json
+    data: |-
+      {
+        "partidoId": 1,
+        "jugadorId": 1,
+        "bandoId": 2,
+        "equipo": "Real Madrid"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

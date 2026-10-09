@@ -1,0 +1,28 @@
+info:
+  name: actualizar
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/torneos/1"
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "Torneo de invierno",
+        "categoriaId": 1,
+        "fechaInicio": "2026-12-01",
+        "fechaFin": "2026-12-31",
+        "cantidadJugadores": 8,
+        "trofeoId": 1,
+        "cantidadGrupos": 2
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

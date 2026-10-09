@@ -1,0 +1,16 @@
+info:
+  name: confirmar
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/participaciones/1/confirmar"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

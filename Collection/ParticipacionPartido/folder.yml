@@ -1,0 +1,7 @@
+info:
+  name: ParticipacionPartido
+  type: folder
+  seq: 9
+
+request:
+  auth: inherit

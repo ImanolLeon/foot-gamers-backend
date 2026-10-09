@@ -1,0 +1,26 @@
+info:
+  name: inscribirme a un torneo (jugador)
+  type: http
+  seq: 8
+  description: |-
+    Me inscribe al torneo del id de la URL. Sin body: el jugador se toma del
+    token, no se recibe por parametro. Responde 200 con el torneo completo.
+
+    REQUISITO: token de un usuario con rol JUGADOR y con fila en la tabla
+    jugador. Este Collection solo tiene token de ADMINISTRADOR, reemplazalo.
+
+    400 si el torneo esta TERMINADO, si ya tiene grupos creados, si yaEstas
+    inscrito (409) o si se alcanzo el cupo de cantidadJugadores.
+    404 si el torneo no existe o si el usuario no tiene jugador asociado.
+
+http:
+  method: POST
+  url: "{{baseUrl}}/torneos/1/inscripcion"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,22 @@
+info:
+  name: actualizar
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/bando/1"
+  body:
+    type: json
+    data: |-
+      {
+        "numeroLado": 2
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

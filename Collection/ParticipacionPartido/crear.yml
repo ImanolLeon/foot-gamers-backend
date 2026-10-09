@@ -1,0 +1,25 @@
+info:
+  name: crear
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/participaciones"
+  body:
+    type: json
+    data: |-
+      {
+        "partidoId": 1,
+        "jugadorId": 1,
+        "bandoId": 1,
+        "equipo": "Barcelona"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

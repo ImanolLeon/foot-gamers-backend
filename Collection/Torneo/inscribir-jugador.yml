@@ -1,0 +1,16 @@
+info:
+  name: inscribir jugador
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{baseUrl}}/torneos/1/jugadores/2"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,33 @@
+info:
+  name: login
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/auth/login"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "{{usuarioAdmin}}",
+        "contrasena": "{{passwordAdmin}}"
+      }
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.status === 200 && res.body && res.body.token) {
+          bru.setVar("token", res.body.token);
+          console.log("Token de " + res.body.username + " (" + res.body.rol + ") guardado en memoria.");
+        } else {
+          console.log("No se guardo token. Revisa las credenciales en opencollection.yml.");
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
