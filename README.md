@@ -2,6 +2,8 @@
 
 API REST para gestionar usuarios, jugadores, torneos, partidos, grupos, bandos, categorías y trofeos. Incluye autenticación JWT, acceso con Google y Discord e imágenes de perfil.
 
+<img width="1868" height="867" alt="image" src="https://github.com/user-attachments/assets/fdd9ddbe-3181-4acd-8300-584d91a17bf4" />
+
 ## Tecnologías
 
 - Java 25 y Spring Boot 4.1.1.
