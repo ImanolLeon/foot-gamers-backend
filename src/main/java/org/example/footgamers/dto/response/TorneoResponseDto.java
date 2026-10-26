@@ -17,6 +17,6 @@ public record TorneoResponseDto(
         Long cantidadJugadores,
         Long cantidadGrupos,
         FaseTorneo faseActual,
-        EstadoTorneo estado
+        EstadoTorneo estado, Long trofeoId
 ) {
 }

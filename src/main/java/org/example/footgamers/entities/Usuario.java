@@ -45,6 +45,6 @@ public class Usuario {
     private String providerId;
 
     // URL remota del avatar que devuelve el proveedor OAuth.
-    @Column(name = "avatar_url", length = 1000)
+    @Column(name = "avatar_url", columnDefinition = "text")
     private String avatarUrl;
 }

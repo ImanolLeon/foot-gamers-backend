@@ -1,6 +1,7 @@
 package org.example.footgamers.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.example.footgamers.repository.UsuarioRepository;
 import org.example.footgamers.security.oauth.OAuth2LoginFailureHandler;
 import org.example.footgamers.security.oauth.OAuth2LoginSuccessHandler;
@@ -23,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+import java.util.Arrays;
 
 @Configuration
 @EnableMethodSecurity
@@ -33,6 +35,12 @@ public class SecurityConfig {
     private final UsuarioRepository usuarioRepository;
     private final OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oauth2LoginFailureHandler;
+
+    @Value("${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174,http://localhost:4173,http://127.0.0.1:4173}")
+    private String allowedOrigins;
+
+    @Value("${app.oauth.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,7 +57,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuracion = new CorsConfiguration();
-        configuracion.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuracion.setAllowedOrigins(Arrays.stream((allowedOrigins + "," + frontendUrl).split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .distinct()
+                .toList());
         configuracion.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuracion.setAllowedHeaders(List.of("*"));
         configuracion.setAllowCredentials(true);
