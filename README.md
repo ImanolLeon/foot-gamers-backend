@@ -180,15 +180,3 @@ src/main/java/org/example/footgamers/
 ```
 
 Configuración: `src/main/resources/application.yaml`. Pruebas: `src/test/java`.
-
-## Problemas frecuentes
-
-| Síntoma | Qué revisar |
-| --- | --- |
-| Variable sin resolver | `.env` en el directorio de ejecución con todas las variables, incluidas las de imágenes. |
-| Error de PostgreSQL | URL, credenciales, permisos y disponibilidad de la base. |
-| Clave JWT corta | Secreto propio de al menos 32 bytes UTF-8. |
-| HTTP 401 | Token presente, válido y no vencido. |
-| HTTP 403 | Rol y permisos de la operación. |
-| Error de compilación | JDK 25 seleccionado por `JAVA_HOME`. |
-| Error OAuth de redirección | Callback registrado idéntico al utilizado por el despliegue. |
