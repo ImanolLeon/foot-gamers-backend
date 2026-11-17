@@ -34,4 +34,21 @@ public class PanelConsultaController {
                 p.getBando().getId(), p.getBando().getNumeroLado(), p.getEquipo(),
                 p.getEstadoConfirmacion())).toList();
     }
-}
+    public record EquipoLlave(Long jugadorId, Long bandoId, int lado, String nombre, String username) {}
+    public record PartidoLlave(Long id, String fase, Long fuenteUnoId, Long fuenteDosId,
+                               Long ganadorId, String resultado, List<EquipoLlave> equipos) {}
+
+    @GetMapping("/torneos/{id}/bracket")
+    public List<PartidoLlave> bracket(@PathVariable Long id) {
+        if (!torneos.existsById(id)) throw ApiException.noEncontrado("Torneo no encontrado");
+        return partidos.findByTorneo_Id(id).stream()
+                .filter(p -> p.getFase() != null && p.getFase() != org.example.footgamers.entities.enums.FaseTorneo.GRUPOS)
+                .map(p -> new PartidoLlave(p.getId(), p.getFase().name(),
+                        p.getFuenteUno() == null ? null : p.getFuenteUno().getId(),
+                        p.getFuenteDos() == null ? null : p.getFuenteDos().getId(),
+                        p.getGanador() == null ? null : p.getGanador().getId(), p.getResultado(),
+                        p.getParticipacionPartidos().stream().map(e -> new EquipoLlave(
+                                e.getJugador().getId(), e.getBando().getId(), e.getBando().getNumeroLado(),
+                                e.getEquipo(), e.getJugador().getUsuario().getUsername())).toList()))
+                .toList();
+    }}

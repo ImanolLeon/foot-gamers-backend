@@ -182,3 +182,21 @@ src/main/java/org/example/footgamers/
 ```
 
 Configuración: `src/main/resources/application.yaml`. Pruebas: `src/test/java`.
+
+## Consultas del panel web
+
+El panel utiliza los recursos autenticados existentes y dos consultas de detalle: `GET /torneos/{id}/participantes` y `GET /partidos/{id}/participaciones`. `TorneoResponseDto` incluye `trofeoId` para editar la asignación del trofeo. Los rechazos por permisos devuelven HTTP 403 mediante `ProblemDetail`.
+
+La integración frontend incluye inscripción, grupos, clasificación, resultados y avance de eliminatorias hasta el campeón. Reiniciar la aplicación tras compilar los cambios para habilitar las nuevas consultas.
+
+### Compatibilidad de torneos y consultas del dashboard
+
+`EstadoTorneoConverter` permite leer el valor antiguo `EN_GRUPOS` como `EN_PROCESO`, evitando errores 500 en torneos y mis torneos sin borrar ni migrar registros automáticamente. Los nuevos valores se guardan como `EN_PROCESO` o `TERMINADO`. La fase sigue almacenada por separado.
+
+`GET /torneos/disponibles` solo ofrece torneos en proceso, con plazas y sin grupos asignados. El listado de partidos se ordena por identificador descendente para que el dashboard muestre los últimos registros. Reiniciar el backend con la compilación actualizada para aplicar estos cambios.
+
+### Bracket persistente
+
+`GET /torneos/{id}/bracket` devuelve los partidos eliminatorios con `fuenteUnoId`, `fuenteDosId`, bandos, jugadores, nombres de equipo y ganador. `PUT /partidos/{id}/ganador/{bandoId}` mantiene el permiso de administrador. Requiere dos participantes confirmados, guarda el avance y finaliza el partido sin inventar goles. Repetir el mismo ganador no modifica el cuadro.
+
+Al cambiar un ganador se reinician sus descendientes: ganador, marcador y estado; se elimina únicamente el participante procedente de la rama afectada. El torneo se reabre y se retira el campeón y el trofeo anteriores. La otra rama se conserva. No se permite generar una segunda llave para el mismo torneo.

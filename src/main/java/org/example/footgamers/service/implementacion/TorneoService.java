@@ -76,7 +76,7 @@ public class TorneoService implements ITorneo {
     @Transactional(readOnly = true)
     public Page<TorneoInscripcionResponseDto> obtenerDisponibles(Long pagina, Long tamano) {
         Jugador jugador = authService.jugadorActual();
-        Page<Torneo> paginaTorneos = torneoRepository.findByEstado(
+        Page<Torneo> paginaTorneos = torneoRepository.findAbiertos(
                 EstadoTorneo.EN_PROCESO, paginacion(pagina, tamano));
         if (paginaTorneos.isEmpty()) {
             return paginaTorneos.map(torneo -> toInscripcionResponse(torneo, 0L, false));
@@ -237,7 +237,7 @@ public class TorneoService implements ITorneo {
                 torneo.getCantidadJugadores(),
                 torneo.getCantidadGrupos(),
                 torneo.getFaseActual(),
-                torneo.getEstado()
+                torneo.getEstado(), torneo.getTrofeo() != null ? torneo.getTrofeo().getId() : null
         );
     }
 

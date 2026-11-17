@@ -14,6 +14,7 @@ import org.example.footgamers.repository.*;
 import org.example.footgamers.service.reglas.IPartido;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,7 @@ public class PartidoService implements IPartido {
     @Override
     @Transactional(readOnly = true)
     public Page<PartidoResponseDto> obtenerTodos(Long pagina, Long tamano) {
-        return partidoRepository.findAll(PageRequest.of(pagina.intValue(), tamano.intValue()))
+        return partidoRepository.findAll(PageRequest.of(pagina.intValue(), tamano.intValue(), Sort.by(Sort.Direction.DESC, "id")))
                 .map(this::toResponse);
     }
 
@@ -92,9 +93,23 @@ public class PartidoService implements IPartido {
         Partido partido = buscarPartido(id);
         Bando bando = buscarBando(bandoId);
         validarParticipacionesConfirmadas(partido);
+        Jugador seleccionado = jugadorDelBando(partido, bando);
+        if (partido.getGanador() != null && partido.getGanador().getId().equals(bandoId)) return toResponse(partido);
+        if (partido.getFase() != null && partido.getFase() != FaseTorneo.GRUPOS) {
+            if (partido.getParticipacionPartidos().size() != 2) {
+                throw ApiException.solicitudInvalida("Se necesitan los dos equipos antes de elegir ganador");
+            }
+            if (partido.getGanador() != null) {
+                limpiarDependencias(partido);
+                if (partido.getTorneo() != null) partido.getTorneo().setFaseActual(partido.getFase());
+                partido.setResultado(null);
+            }
+            partido.setEstado(EstadoPartido.FINALIZADO);
+            partido.setEstadoConfirmacion(EstadoConfirmacion.CONFIRMADO);
+        }
         partido.setGanador(bando);
         partido = partidoRepository.save(partido);
-        Jugador ganador = jugadorDelBando(partido, bando);
+        Jugador ganador = seleccionado;
         if (partido.getFase() == FaseTorneo.FINAL) {
             finalizarTorneo(partido.getTorneo(), ganador);
         } else if (partido.getFase() != null && partido.getFase() != FaseTorneo.GRUPOS) {
@@ -107,7 +122,7 @@ public class PartidoService implements IPartido {
     @Transactional
     public PartidoResponseDto confirmarPartido(Long id, String resultado) {
         Partido partido = buscarPartido(id);
-        if (partido.getEstado() == EstadoPartido.FINALIZADO) {
+        if (partido.getEstado() == EstadoPartido.FINALIZADO && partido.getResultado() != null) {
             throw ApiException.solicitudInvalida("El partido ya fue finalizado");
         }
         int[] goles = parsearResultado(resultado);
@@ -184,13 +199,7 @@ public class PartidoService implements IPartido {
                 && siguiente.getFuenteUno().getId().equals(partido.getId());
         int lado = esFuenteUno ? 1 : 2;
 
-        if (siguiente.getParticipacionPartidos() != null) {
-            for (ParticipacionPartido participacion : siguiente.getParticipacionPartidos()) {
-                if (participacion.getBando() != null && participacion.getBando().getNumeroLado() == lado) {
-                    participacionPartidoRepository.delete(participacion);
-                }
-            }
-        }
+        quitarLado(siguiente, lado);
 
         Bando bando = new Bando();
         bando.setNumeroLado(lado);
@@ -200,9 +209,41 @@ public class PartidoService implements IPartido {
         participacion.setPartido(siguiente);
         participacion.setBando(bando);
         participacion.setJugador(ganador);
-        participacion.setEquipo(ganador.getUsuario().getUsername());
+        participacion.setEquipo(partido.getParticipacionPartidos().stream()
+                .filter(p -> p.getJugador().getId().equals(ganador.getId()))
+                .map(ParticipacionPartido::getEquipo).filter(java.util.Objects::nonNull)
+                .findFirst().orElse(ganador.getUsuario().getUsername()));
         participacion.setEstadoConfirmacion(EstadoConfirmacion.CONFIRMADO);
         participacionPartidoRepository.save(participacion);
+    }
+
+    private void quitarLado(Partido partido, int lado) {
+        var iterador = partido.getParticipacionPartidos().iterator();
+        while (iterador.hasNext()) {
+            var participacion = iterador.next();
+            if (participacion.getBando().getNumeroLado() == lado) {
+                iterador.remove();
+                participacionPartidoRepository.delete(participacion);
+            }
+        }
+    }
+
+    private void limpiarDependencias(Partido origen) {
+        Torneo torneo = origen.getTorneo();
+        if (torneo != null) {
+            torneo.setGanador(null);
+            torneo.setEstado(EstadoTorneo.EN_PROCESO);
+
+            if (torneo.getTrofeo() != null) torneo.getTrofeo().setJugador(null);
+        }
+        for (Partido siguiente : partidoRepository.findByFuenteUno_IdOrFuenteDos_Id(origen.getId(), origen.getId())) {
+            limpiarDependencias(siguiente);
+            siguiente.setGanador(null);
+            siguiente.setResultado(null);
+            siguiente.setEstado(EstadoPartido.PROGRAMADO);
+            siguiente.setEstadoConfirmacion(EstadoConfirmacion.NO_CONFIRMADO);
+            quitarLado(siguiente, siguiente.getFuenteUno() != null && siguiente.getFuenteUno().getId().equals(origen.getId()) ? 1 : 2);
+        }
     }
 
     private void finalizarTorneo(Torneo torneo, Jugador ganador) {

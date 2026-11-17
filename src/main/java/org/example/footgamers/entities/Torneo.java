@@ -51,7 +51,7 @@ public class Torneo {
     @Column(name = "fase_actual")
     private FaseTorneo faseActual;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = EstadoTorneoConverter.class)
     private EstadoTorneo estado;
 
     @OneToMany(mappedBy = "torneo", cascade = CascadeType.ALL)

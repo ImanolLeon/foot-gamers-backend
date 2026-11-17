@@ -14,6 +14,12 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ProblemDetail manejarAccesoDenegado(org.springframework.security.access.AccessDeniedException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN,
+                "Tu cuenta no tiene permisos para realizar esta operación.");
+    }
+
     @ExceptionHandler(ApiException.class)
     public ProblemDetail manejarApiException(ApiException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(ex.getHttpStatus(), ex.getMessage());

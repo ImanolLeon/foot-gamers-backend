@@ -21,6 +21,10 @@ public interface TorneoRepository extends JpaRepository<Torneo, Long> {
 
     Page<Torneo> findByEstado(EstadoTorneo estado, Pageable pageable);
 
+    @Query("select t from Torneo t where t.estado = :estado and t.grupos is empty "
+            + "and size(t.participantes) < t.cantidadJugadores")
+    Page<Torneo> findAbiertos(@Param("estado") EstadoTorneo estado, Pageable pageable);
+
     boolean existsByIdAndParticipantes_Id(Long id, Long jugadorId);
 
     @Query("select t.id as torneoId, count(p) as inscritos "

@@ -304,7 +304,7 @@ public class JugadorService implements IJugador {
                 torneo.getCantidadJugadores(),
                 torneo.getCantidadGrupos(),
                 torneo.getFaseActual(),
-                torneo.getEstado()
+                torneo.getEstado(), torneo.getTrofeo() != null ? torneo.getTrofeo().getId() : null
         );
     }
 

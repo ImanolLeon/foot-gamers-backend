@@ -114,6 +114,10 @@ public class GrupoService implements IGrupo {
             throw ApiException.solicitudInvalida(MensajeException.TORNEO_SIN_GRUPOS);
         }
 
+        if (partidoRepository.findByTorneo_Id(torneoId).stream()
+                .anyMatch(p -> p.getFase() != null && p.getFase() != FaseTorneo.GRUPOS)) {
+            throw ApiException.solicitudInvalida("Las llaves ya fueron generadas");
+        }
         List<Jugador> clasificados = new ArrayList<>();
         for (Grupo grupo : grupos) {
             List<Clasificacion> tabla = ordenarClasificacion(clasificacionRepository.findByGrupo_Id(grupo.getId()));
