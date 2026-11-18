@@ -51,3 +51,7 @@ app:
   oauth:
     # A donde redirige el backend tras un login OAuth correcto.
     frontend-url: ${FRONTEND_URL}
+# CREDENCIALES PARA INGRESAR AL SISTEMA
+admin:
+    username: ${ADMIN_USERNAME}
+    password: ${ADMIN_PASSWORD}

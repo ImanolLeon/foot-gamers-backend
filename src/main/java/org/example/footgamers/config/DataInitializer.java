@@ -1,6 +1,7 @@
 package org.example.footgamers.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.example.footgamers.entities.Jugador;
 import org.example.footgamers.entities.Usuario;
@@ -19,8 +20,10 @@ import java.util.ArrayList;
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
-
-    private static final String USERNAME_ADMIN = "imanol";
+    @Value("${admin.username}")
+    private String USERNAME_ADMIN;
+    @Value("${admin.password}")
+    private String USERNAME_PASSWORD;
 
     private final UsuarioRepository usuarioRepository;
     private final JugadorRepository jugadorRepository;
@@ -46,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
         Usuario admin = new Usuario();
         admin.setUsername(USERNAME_ADMIN);
         admin.setEmail("imanol@footgamers.com");
-        admin.setContrasena(passwordEncoder.encode("123456"));
+        admin.setContrasena(passwordEncoder.encode(USERNAME_PASSWORD));
         admin.setRol(Rol.ADMINISTRADOR);
         admin.setProvider("local");
         return usuarioRepository.save(admin);
