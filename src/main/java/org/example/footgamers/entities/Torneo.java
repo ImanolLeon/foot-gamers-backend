@@ -34,7 +34,7 @@ public class Torneo {
     private LocalDate fechaFin;
 
     @ManyToOne()
-    @JoinColumn(name = "ganador_id")
+    @JoinColumn(name = "ganador_id", nullable = true)
     private Jugador ganador;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "torneo")

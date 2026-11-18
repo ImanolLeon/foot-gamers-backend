@@ -60,8 +60,8 @@ public class TorneoService implements ITorneo {
         torneo.setFechaFin(request.fechaFin());
         torneo.setCantidadJugadores(request.cantidadJugadores());
         torneo.setCantidadGrupos(request.cantidadGrupos());
-        torneo.setFaseActual(FaseTorneo.GRUPOS);
-        torneo.setEstado(EstadoTorneo.EN_PROCESO);
+        torneo.setFaseActual(FaseTorneo.INSCRIPCION);
+        torneo.setEstado(EstadoTorneo.ABIERTO);
         return toResponse(torneoRepository.save(torneo));
     }
 
@@ -77,7 +77,7 @@ public class TorneoService implements ITorneo {
     public Page<TorneoInscripcionResponseDto> obtenerDisponibles(Long pagina, Long tamano) {
         Jugador jugador = authService.jugadorActual();
         Page<Torneo> paginaTorneos = torneoRepository.findAbiertos(
-                EstadoTorneo.EN_PROCESO, paginacion(pagina, tamano));
+                EstadoTorneo.ABIERTO, paginacion(pagina, tamano));
         if (paginaTorneos.isEmpty()) {
             return paginaTorneos.map(torneo -> toInscripcionResponse(torneo, 0L, false));
         }
