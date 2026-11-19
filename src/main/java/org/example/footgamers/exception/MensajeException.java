@@ -13,6 +13,8 @@ public class MensajeException {
     public static final String TORNEO_SIN_GRUPOS = "El torneo aun no tiene grupos asignados";
     public static final String TORNEO_SIN_JUGADORES = "El torneo aun no tiene jugadores inscritos";
     public static final String TORNEO_TERMINADO = "No se pueden inscribir jugadores en un torneo terminado";
+    public static final String TORNEO_NO_DISPONIBLE =
+            "El torneo no admite inscripciones en su estado actual";
     public static final String TORNEO_YA_TERMINADO = "El torneo ya se encuentra terminado";
     public static final String ESTADO_TORNEO_INVALIDO = "El único cambio de estado permitido es a TERMINADO";
     public static final String TORNEO_CON_GRUPOS =

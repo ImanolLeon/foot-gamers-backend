@@ -169,9 +169,7 @@ public class TorneoService implements ITorneo {
     }
 
     private void validarInscripcion(Torneo torneo, Jugador jugador) {
-        if (torneo.getEstado() != EstadoTorneo.EN_PROCESO) {
-            throw ApiException.solicitudInvalida(MensajeException.TORNEO_TERMINADO);
-        }
+        validarEstadoParaInscripcion(torneo.getEstado());
         if (!grupoRepository.findByTorneo_Id(torneo.getId()).isEmpty()) {
             throw ApiException.solicitudInvalida(MensajeException.TORNEO_CON_GRUPOS);
         }
@@ -182,6 +180,20 @@ public class TorneoService implements ITorneo {
         if (inscritos >= torneo.getCantidadJugadores()) {
             throw ApiException.solicitudInvalida(
                     String.format(MensajeException.TORNEO_SIN_CUPO, torneo.getCantidadJugadores()));
+        }
+    }
+
+    /**
+     * Los torneos recién creados quedan en ABIERTO (fase INSCRIPCION) y también
+     * deben admitir inscripciones. EN_PROCESO se conserva por compatibilidad con
+     * los torneos creados antes de que existiera el estado ABIERTO.
+     */
+    private void validarEstadoParaInscripcion(EstadoTorneo estado) {
+        if (estado == EstadoTorneo.TERMINADO) {
+            throw ApiException.solicitudInvalida(MensajeException.TORNEO_TERMINADO);
+        }
+        if (estado != EstadoTorneo.ABIERTO && estado != EstadoTorneo.EN_PROCESO) {
+            throw ApiException.solicitudInvalida(MensajeException.TORNEO_NO_DISPONIBLE);
         }
     }
 
